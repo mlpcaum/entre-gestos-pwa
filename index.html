@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entre gestos e silêncios</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1320">
+<style>
+:root{
+  --bg:#0b1320;
+  --card:#111a2b;
+  --card2:#0f1a2e;
+  --text:#ffffff;
+  --muted:rgba(255,255,255,.78);
+  --muted2:rgba(255,255,255,.6);
+  --accent:#6b5cff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:760px;margin:auto;padding:20px}
+h1,h2,h3{margin:0 0 12px 0}
+.small{opacity:.85;font-size:13px;line-height:1.45}
+.toprow{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 18px 0}
+button{
+  padding:12px 16px;border:0;border-radius:12px;background:var(--accent);
+  color:#fff;font-size:15px;cursor:pointer;flex:1;min-width:160px
+}
+button.secondary{background:#1a2740}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,.18)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.card{background:var(--card);padding:16px;border-radius:16px;margin-bottom:14px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.card .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
+.locked{opacity:.55}
+input{width:100%;padding:12px;border-radius:12px;border:0;margin:10px 0 12px 0;background:rgba(255,255,255,.08);color:#fff}
+input::placeholder{color:rgba(255,255,255,.6)}
+.tabrow{display:flex;gap:10px;margin:10px 0 14px 0}
+.tab{flex:1}
+.pane{background:var(--card);padding:20px;border-radius:18px}
+.content{
+  white-space:pre-wrap;
+  line-height:1.85;
+  font-size:15px;
+  max-width:680px;
+  margin:0 auto;
+  color:rgba(255,255,255,.92);
+}
+textarea{
+  width:100%;min-height:110px;resize:vertical;border-radius:12px;border:0;
+  padding:12px;margin:8px 0 12px 0;background:rgba(255,255,255,.08);color:#fff
+}
+label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+hr{border:0;border-top:1px solid rgba(255,255,255,.1);margin:14px 0}
+a{color:#b8d7ff}
+
+body{
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(107,92,255,.18), transparent 55%),
+              radial-gradient(900px 500px at 90% 20%, rgba(145,255,206,.12), transparent 55%),
+              linear-gradient(180deg, #07101e 0%, #0b1320 40%, #07101e 100%);
+}
+.readerWrap{display:grid;grid-template-columns: 1fr;gap:14px}
+@media (min-width: 900px){
+  .readerWrap{grid-template-columns: 1fr 320px}
+}
+.hero{
+  border-radius:16px;
+  overflow:hidden;
+  background:#111a2b;
+  box-shadow:0 10px 24px rgba(0,0,0,.25);
+}
+.hero img{width:100%;height:220px;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.02)}
+.quoteBox{
+  background:rgba(17,26,43,.9);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:16px;
+  position:relative;
+}
+.quoteMark{
+  position:absolute;top:10px;left:14px;
+  font-size:34px;opacity:.25;line-height:1;
+}
+.quoteText{margin:12px 0 10px 0;line-height:1.55;color:rgba(255,255,255,.92);font-size:15px}
+.quoteAuthor{font-size:13px;color:rgba(255,255,255,.72)}
+.thumb{
+  width:100%;
+  height:120px;
+  border-radius:14px;
+  object-fit:cover;
+  display:block;
+  margin-bottom:10px;
+  filter:saturate(1.05) contrast(1.02);
+}
+
+
+/* Theme + reading controls */
+:root{
+  --bg:#0b1320;
+  --bg2:#07101e;
+  --card:#111a2b;
+  --card2:#0f1a2e;
+  --text:#ffffff;
+  --muted:rgba(255,255,255,.78);
+  --muted2:rgba(255,255,255,.6);
+  --accent:#6b5cff;
+  --accent2:rgba(145,255,206,.18);
+  --shadow: rgba(0,0,0,.25);
+  --readerFont: 15px;
+}
+body[data-theme="light"]{
+  --bg:#f6f7fb;
+  --bg2:#ffffff;
+  --card:#ffffff;
+  --card2:#ffffff;
+  --text:#0b1320;
+  --muted:rgba(11,19,32,.72);
+  --muted2:rgba(11,19,32,.55);
+  --accent:#5b59ff;
+  --accent2:rgba(91,89,255,.12);
+  --shadow: rgba(0,0,0,.08);
+}
+body{
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(107,92,255,.16), transparent 55%),
+              radial-gradient(900px 500px at 90% 20%, rgba(145,255,206,.10), transparent 55%),
+              linear-gradient(180deg, var(--bg2) 0%, var(--bg) 40%, var(--bg2) 100%);
+}
+button.secondary{background:rgba(26,39,64,.92)}
+body[data-theme="light"] button.secondary{background:rgba(11,19,32,.06); color:var(--text)}
+.card{box-shadow:0 10px 24px var(--shadow)}
+.pane{padding:18px;border-radius:18px}
+/* book-like reading */
+.content{
+  white-space:pre-wrap;
+  line-height:1.85;
+  font-size:var(--readerFont);
+  max-width:680px;
+  margin:0 auto;
+  color:rgba(255,255,255,.92);
+}
+body[data-theme="light"] .content{color:rgba(11,19,32,.92)}
+/* Mobile optimization: more lines visible when font smaller */
+@media (max-width: 520px){
+  .app{padding:14px}
+  .pane{padding:16px}
+  .hero img{height:180px}
+  .toprow{gap:10px}
+  button{padding:12px 14px;font-size:14px}
+  .content{line-height:1.8; max-width:100%}
+}
+.controls{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 12px 0
+}
+.controlBox{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:10px 12px;
+  flex:1;min-width:160px
+}
+body[data-theme="light"] .controlBox{
+  background:rgba(11,19,32,.04);
+  border-color:rgba(11,19,32,.10);
+}
+.slider{
+  width:100%;
+}
+.smallBtn{
+  padding:10px 12px;border-radius:12px;font-size:13px
+}
+.notice{
+  background:rgba(107,92,255,.12);
+  border:1px solid rgba(107,92,255,.18);
+  color:var(--muted);
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:13px;
+  margin:10px 0 0 0;
+}
+body[data-theme="light"] .notice{
+  background:rgba(91,89,255,.08);
+  border-color:rgba(91,89,255,.14);
+}
+mark.fav{
+  background:rgba(145,255,206,.25);
+  color:inherit;
+  padding:0 2px;
+  border-radius:6px;
+}
+body[data-theme="light"] mark.fav{background:rgba(91,89,255,.18)}
+.favListItem{
+  padding:12px;border-radius:14px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10); margin-bottom:10px
+}
+body[data-theme="light"] .favListItem{background:rgba(11,19,32,.03); border-color:rgba(11,19,32,.10)}
+.favMeta{font-size:12px;color:var(--muted2);margin-top:8px}
+
+/* Livelier header */
+.headerCard{
+  background: linear-gradient(135deg, rgba(107,92,255,.18), rgba(145,255,206,.10));
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  padding: 14px 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.22);
+}
+body[data-theme="light"] .headerCard{
+  border-color: rgba(11,19,32,.10);
+  box-shadow: 0 18px 40px rgba(0,0,0,.08);
+}
+.headerInner{display:flex;gap:12px;align-items:center;justify-content:center}
+.appIcon{width:44px;height:44px;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.headerText{text-align:center}
+.title{font-size:22px;font-weight:800;letter-spacing:.2px}
+.subtitle{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.35}
+.crp{opacity:.9;margin-left:6px;white-space:nowrap}
+/* Slightly punchier buttons */
+button{box-shadow: 0 10px 22px rgba(107,92,255,.20)}
+button.secondary{box-shadow: 0 10px 22px rgba(0,0,0,.14)}
+@media (hover:hover){
+  .card{transition: transform .12s ease, box-shadow .12s ease}
+  .card:hover{transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,0,0,.30)}
+}
+
+.quoteText{overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="./chapters-data.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
+}
+
+const MS_DAY = 24 * 60 * 60 * 1000;
+
+const CHAPTER_IMAGES = {"1": "./chapter-1.jpg", "2": "./chapter-2.jpg", "3": "./chapter-3.jpg", "4": "./chapter-4.jpg", "5": "./chapter-5.jpg", "6": "./chapter-6.jpg", "7": "./chapter-7.jpg"};
+const QUOTES = {"1": {"quote": "E, principalmente, a sair do ciclo de sentir, reprimir, interpretar sozinha e sofrer em silêncio.", "author": "Matheus Caum · Introdução"}, "2": {"quote": "Quando isso não acontece, o sentimento passa a ser tratado como exagero.", "author": "Matheus Caum · 1: Você não está exagerando, você está reagindo"}, "3": {"quote": "Quando a atenção começa a falhar, o corpo percebe que talvez não seja tão seguro se estender.", "author": "Matheus Caum · 2: Atenção e Presença"}, "4": {"quote": "Dias em que a atenção cai, o humor oscila, a presença fica prejudicada.", "author": "Matheus Caum · 3: O que NÃO é sinal pequeno"}, "5": {"quote": "No silêncio, você começa a se afastar de si mesma.", "author": "Matheus Caum · 4: O ciclo da confusão emocional"}, "6": {"quote": "Em vez de se acusar por sentir, talvez comece a se perguntar o que esse sentir está pedindo.", "author": "Matheus Caum · 5: Teste de clareza emocional"}, "7": {"quote": "Quando você se valida primeiro, a conversa muda de tom.", "author": "Matheus Caum · 6: Observar antes de reagir"}, "8": {"quote": "Clareza pode doer no início porque ela tira você da fantasia.", "author": "Matheus Caum · 7: Quando seguir e quando parar"}};
+
+// Reading settings (persisted)
+function getTheme(){ return localStorage.getItem("theme") || "dark"; }
+function setTheme(t){ localStorage.setItem("theme", t); document.body.setAttribute("data-theme", t); }
+function getFont(){ return parseInt(localStorage.getItem("readerFont") || "15", 10); }
+function setFont(px){ 
+  const v = Math.max(13, Math.min(20, px));
+  localStorage.setItem("readerFont", String(v));
+  document.documentElement.style.setProperty("--readerFont", v + "px");
+}
+
+// Favorites (highlighted excerpts)
+function favKey(){ return `favorites:${user}`; }
+function loadFavs(){
+  try{ return JSON.parse(localStorage.getItem(favKey()) || "[]"); }catch(e){ return []; }
+}
+function saveFavs(arr){ localStorage.setItem(favKey(), JSON.stringify(arr)); }
+function chapterFavs(chId){
+  return loadFavs().filter(f => f.chapterId === chId);
+}
+function addFavorite(chId, excerpt){
+  const trimmed = (excerpt || "").trim().replace(/\s+/g, " ");
+  if(!trimmed) return;
+  const all = loadFavs();
+  // avoid duplicates (same excerpt same chapter)
+  if(all.some(x => x.chapterId===chId && x.excerpt===trimmed)) return;
+  all.push({ id: String(Date.now()), chapterId: chId, excerpt: trimmed, createdAt: new Date().toISOString() });
+  saveFavs(all);
+}
+function removeFavorite(favId){
+  const all = loadFavs().filter(f => f.id !== favId);
+  saveFavs(all);
+}
+function applyReadingSettings(){
+  setTheme(getTheme());
+  setFont(getFont());
+}
+function getSelectedText(){
+  const sel = window.getSelection ? window.getSelection() : null;
+  if(!sel) return "";
+  const txt = sel.toString();
+  return txt || "";
+}
+function clearSelection(){
+  const sel = window.getSelection ? window.getSelection() : null;
+  if(sel && sel.removeAllRanges) sel.removeAllRanges();
+}
+
+
+const root = document.getElementById("root");
+applyReadingSettings();
+let user = localStorage.getItem("userEmail") || "";
+let purchaseAt = localStorage.getItem("purchaseAt") || "";
+let view = "home"; // home | chapter | pdf
+let activeId = null;
+let tab = "leitura"; // leitura | reflexao
+
+function todayISO(){
+  const d = new Date();
+  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString();
+}
+function daysSincePurchase(){
+  if(!purchaseAt) return 0;
+  const start = new Date(purchaseAt).getTime();
+  const now = Date.now();
+  const diff = now - start;
+  return Math.max(0, Math.floor(diff / MS_DAY));
+}
+function isUnlockedByDay(unlockDay){
+  return daysSincePurchase() >= unlockDay;
+}
+function bookUnlocked(){
+  return daysSincePurchase() >= 7;
+}
+function remainingDays(unlockDay){
+  return Math.max(0, unlockDay - daysSincePurchase());
+}
+
+function maskEmail(email){
+  const e = (email || "").trim();
+  if(!e.includes("@")) return e ? (e.slice(0,2) + "…") : "";
+  const parts = e.split("@");
+  const u = parts[0] || "";
+  const d = parts[1] || "";
+  const uu = u.length <= 2 ? (u.slice(0,1) + "…") : (u.slice(0,2) + "…" + u.slice(-1));
+  const dd = d.length <= 4 ? (d.slice(0,1) + "…") : (d.slice(0,2) + "…" + d.slice(-2));
+  return uu + "@" + dd;
+}
+function esc(s){
+  return (s || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function getChapter(){
+  return (window.CHAPTERS || []).find(c => c.id === activeId) || null;
+}
+
+function login(){
+  const email = document.getElementById("email").value.trim();
+  if(!email) return;
+  user = email;
+  localStorage.setItem("userEmail", user);
+
+  if(!purchaseAt){
+    purchaseAt = todayISO();
+    localStorage.setItem("purchaseAt", purchaseAt);
+  }
+  view = "home";
+  render();
+}
+
+
+function toggleTheme(){
+  const next = getTheme()==="dark" ? "light" : "dark";
+  setTheme(next);
+  render();
+}
+function logout(){
+  localStorage.removeItem("userEmail");
+  user = "";
+  activeId = null;
+  view = "home";
+  render();
+}
+
+function openChapter(id){
+  const ch = (window.CHAPTERS || []).find(x => x.id === id);
+  if(!ch) return;
+
+  if(!isUnlockedByDay(ch.unlockDay)){
+    render(); 
+    return;
+  }
+  activeId = id;
+  view = "chapter";
+  tab = "leitura";
+  render();
+}
+
+function openPDF(){
+  view = "pdf";
+  render();
+}
+
+function goHome(){
+  view = "home";
+  activeId = null;
+  render();
+}
+
+function switchTab(next){
+  tab = next;
+  render();
+}
+
+function reflectionKey(){
+  return `reflection:${user}:${activeId}`;
+}
+
+function loadReflection(){
+  try{
+    return JSON.parse(localStorage.getItem(reflectionKey()) || "{}");
+  }catch(e){
+    return {};
+  }
+}
+
+
+function addFavFromSelection(){
+  const txt = getSelectedText();
+  if(!txt || txt.trim().length < 8){
+    alert("Selecione um trecho maior para destacar.");
+    return;
+  }
+  addFavorite(activeId, txt);
+  clearSelection();
+  render();
+}
+function saveReflection(){
+  const data = {
+    impact: document.getElementById("impact").value.trim(),
+    phrase: document.getElementById("phrase").value.trim(),
+    moment: document.getElementById("moment").value.trim(),
+    action: document.getElementById("action").value.trim(),
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem(reflectionKey(), JSON.stringify(data));
+  render();
+}
+
+function renderLogin(){
+  root.innerHTML = `
+  <div class="app">
+    <h1>Entre gestos e silêncios</h1>
+    <p class="small">Digite seu e-mail para liberar o acesso diário aos capítulos. O livro completo abre no 7º dia.</p>
+    <input id="email" placeholder="Seu e-mail" inputmode="email" />
+    <button onclick="login()">Entrar</button>
+  </div>`;
+}
+
+function renderHome(){
+  const d = daysSincePurchase();
+  const bookReady = bookUnlocked();
+  const bookInfo = bookReady ? 
+    `<span class="badge">Livro completo liberado</span>` :
+    `<span class="badge">Livro completo em ${remainingDays(7)} dia(s)</span>`;
+
+  root.innerHTML = `
+  <div class="app">
+    <div class="headerCard">
+  <div class="headerInner">
+    <img class="appIcon" src="./icon-96.png" alt="Ícone do app" />
+    <div class="headerText">
+      <div class="title">Entre gestos e silêncios</div>
+      <div class="subtitle"><em>Uma experiência de leitura emocional criada pelo psicólogo Matheus Caum</em> <span class="crp">CRP 08/40928</span></div>
+    </div>
+  </div>
+</div>
+    <p class="small">E-mail: ${esc(maskEmail(user))} <br/>Dia de acesso: <strong>${d}</strong> | ${bookInfo}</p>
+
+    <div class="toprow">
+      <button onclick="openPDF()" ${bookReady ? "" : "disabled"}>Ler livro completo</button>
+      <button class="secondary" onclick="toggleTheme()">Modo</button>
+      <button class="secondary" onclick="logout()">Sair</button>
+    </div>
+
+    ${(window.CHAPTERS || []).map(ch => {
+      const ok = isUnlockedByDay(ch.unlockDay);
+      const status = ok ? "Liberado" : `Em ${remainingDays(ch.unlockDay)} dia(s)`;
+      const badge = ch.unlockDay === 0 ? "Disponível agora" : status;
+
+      return `
+      <div class="card ${ok ? "" : "locked"}">\n        <img class="thumb" src="${CHAPTER_IMAGES[String(ch.id)] || './chapter-1.jpg'}" alt="Imagem do capítulo" loading="lazy"/>
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <div>
+            <div style="font-weight:700;margin-bottom:6px">${esc(ch.title)}</div>
+            <span class="badge">${esc(badge)}</span>
+          </div>
+        </div>
+        <div class="row">
+          <button onclick="openChapter(${ch.id})" ${ok ? "" : "disabled"}>Ler capítulo</button>
+          <button class="secondary" onclick="openPDF()" ${bookReady ? "" : "disabled"}>Livro completo</button>
+        </div>
+      </div>`;
+    }).join("")}
+
+    <p class="small">Regra: capítulos 1 e 2 liberados no dia 0. A partir do 3, libera 1 por dia. O livro completo abre no 7º dia.</p>
+  </div>`;
+}
+
+
+function displayContentText(ch){
+  let t = ch.content || "";
+  // Remove leading duplicated headings like "Capítulo", "Introdução" or chapter title repeated
+  const headPatterns = [
+    /^\s*(Cap[ií]tulo\s*\d+\s*:?)\s*/i,
+    /^\s*(Cap[ií]tulo)\s*/i,
+    /^\s*(Introdu[cç][aã]o)\s*/i
+  ];
+  headPatterns.forEach(rx => { t = t.replace(rx, ""); });
+  // If chapter title repeats at start, drop it
+  const title = (ch.title || "").replace(/^Cap[ií]tulo\s*\d+\s*:\s*/i, "").trim();
+  if(title){
+    const rx = new RegExp("^\\s*" + title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*", "i");
+    t = t.replace(rx, "");
+  }
+  return t.trim();
+}
+
+function renderChapter(){
+  const ch = getChapter();
+  if(!ch){ goHome(); return; }
+
+  const ref = loadReflection();
+  const saved = ref.savedAt ? `<span class="badge">Salvo</span>` : `<span class="badge">Ainda não salvo</span>`;
+
+  const tabButtons = `
+    <div class="tabrow">
+      <button class="tab ${tab==="leitura" ? "" : "secondary"}" onclick="switchTab('leitura')">Leitura</button>
+      <button class="tab ${tab==="reflexao" ? "" : "secondary"}" onclick="switchTab('reflexao')">Reflexão</button>
+    </div>
+  `;
+
+  let pane = "";
+  if(tab === "leitura"){
+    pane = `
+      <div class="controls">
+        <div class="controlBox">
+          <div class="small" style="margin-bottom:8px">Tamanho da fonte</div>
+          <input class="slider" type="range" min="13" max="20" step="1" value="${getFont()}" oninput="setFont(this.value)"/>
+          <div class="small" style="margin-top:6px">Atual: ${getFont()}px</div>
+        </div>
+        <button class="secondary smallBtn" onclick="toggleTheme()">Noturno / diurno</button>
+        <button class="smallBtn" onclick="addFavFromSelection()">Destacar</button>
+      </div>
+      <div class="readerWrap">
+        <div>
+          <div class="hero" style="margin-bottom:14px">
+            <img src="${CHAPTER_IMAGES[String(ch.id)] || './chapter-1.jpg'}" alt="Imagem do capítulo" loading="lazy"/>
+          </div>
+          <div class="pane">
+            <div class="content" id="chapterContent">${esc(displayContentText(ch))}</div>
+          </div>
+          <div class="notice">Dica: selecione um trecho do texto e toque em “Destacar” para salvar como favorito.</div>
+        </div>
+        <div class="quoteBox">
+          <div class="quoteMark">“</div>
+          <div class="quoteText">${esc((QUOTES[String(ch.id)]||{}).quote || "")}</div>
+          <div class="quoteAuthor">${esc((QUOTES[String(ch.id)]||{}).author || "Matheus Caum")}</div>
+          <hr/>
+          <div style="font-weight:700;margin-bottom:10px">Trechos favoritos</div>
+          ${chapterFavs(ch.id).length ? chapterFavs(ch.id).map(f => `
+            <div class="favListItem">
+              <div>${esc(f.excerpt)}</div>
+              <div class="favMeta">
+                <button class="ghost smallBtn" onclick="removeFavorite('${f.id}'); render();">Remover</button>
+              </div>
+            </div>
+          `).join("") : `<div class="small">Você ainda não destacou nenhum trecho neste capítulo.</div>`}
+        </div>
+      </div>`;
+  } else {
+    pane = `
+      <div class="pane">
+        <div class="hero" style="margin-bottom:14px"><img src="${CHAPTER_IMAGES[String(ch.id)] || './chapter-1.jpg'}" alt="Imagem do capítulo" loading="lazy"/></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <div style="font-weight:700">Sua reflexão</div>
+          ${saved}
+        </div>
+        <p class="small">Responda do seu jeito. Isso fica salvo no seu aparelho.</p>
+
+        <label>1) Como esse capítulo te afetou?</label>
+        <textarea id="impact" placeholder="Escreva aqui...">${esc(ref.impact || "")}</textarea>
+
+        <label>2) Qual foi a frase, ideia ou trecho que mais te fez pensar?</label>
+        <textarea id="phrase" placeholder="Escreva aqui...">${esc(ref.phrase || "")}</textarea>
+
+        <label>3) Em que momento você sentiu: isso já aconteceu comigo?</label>
+        <textarea id="moment" placeholder="Escreva aqui...">${esc(ref.moment || "")}</textarea>
+
+        <label>4) O que você quer levar para a prática a partir disso?</label>
+        <textarea id="action" placeholder="Escreva aqui...">${esc(ref.action || "")}</textarea>
+
+        <button onclick="saveReflection()">Salvar reflexão</button>
+        ${ref.savedAt ? `<p class="small">Último salvamento: ${esc(new Date(ref.savedAt).toLocaleString())}</p>` : ""}
+      </div>`;
+  }
+
+  root.innerHTML = `
+  <div class="app">
+    <div class="toprow">
+      <button class="secondary" onclick="goHome()">Voltar</button>
+      <button onclick="openPDF()" ${bookUnlocked() ? "" : "disabled"}>Livro completo</button>
+    </div>
+    <h2>${esc(ch.title)}</h2>
+    ${tabButtons}
+    ${pane}
+  </div>`;
+}
+
+function renderPDF(){
+  const ok = bookUnlocked();
+  const msg = ok ? 
+    "Livro completo liberado. Você pode ler o PDF inteiro aqui." :
+    `O livro completo libera no 7º dia. Falta(m) ${remainingDays(7)} dia(s).`;
+
+  root.innerHTML = `
+  <div class="app">
+    <div class="toprow">
+      <button class="secondary" onclick="goHome()">Voltar</button>
+      <button class="secondary" onclick="toggleTheme()">Modo</button>
+      <button onclick="openPDF()" disabled>Livro completo</button>
+    </div>
+    <h2>Livro completo</h2>
+    <p class="small">${esc(msg)}</p>
+    ${ok ? `<div class="pane"><iframe src="./book.pdf" style="width:100%;height:78vh;border:0;border-radius:16px;background:#111a2b"></iframe></div>` : ""}
+  </div>`;
+}
+
+function render(){
+  if(!user){ renderLogin(); return; }
+  if(!purchaseAt){
+    purchaseAt = todayISO();
+    localStorage.setItem("purchaseAt", purchaseAt);
+  }
+  if(view === "home") renderHome();
+  if(view === "chapter") renderChapter();
+  if(view === "pdf") renderPDF();
+}
+
+render();
+</script>
+</body>
+</html>
