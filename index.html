@@ -231,10 +231,11 @@ button.secondary{box-shadow: 0 10px 22px rgba(0,0,0,.14)}
 
 <script src="./chapters-data.js"></script>
 <script>
-  const supabase = window.supabase.createClient(
-    window.__ENV__.SUPABASE_URL,
-    window.__ENV__.SUPABASE_ANON_KEY
-  );
+  const sb = window.supabase.createClient(
+  window.__ENV__.SUPABASE_URL,
+  window.__ENV__.SUPABASE_ANON_KEY
+);
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
 }
