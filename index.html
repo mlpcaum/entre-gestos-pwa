@@ -474,7 +474,8 @@ async function handleSignup() {
     alert("Conta criada. Agora confirme o e-mail e depois clique em Entrar.");
   } else {
     alert("Conta criada e logada.");
-    location.reload();
+    await boot();
+
   }
 }
 
@@ -503,7 +504,8 @@ async function handleLogin() {
   }
 
   alert("Entrou com sucesso.");
-  location.reload();
+  await boot();
+
 }
 
 
@@ -698,6 +700,24 @@ function render(){
 }
 
 render();
+
+async function boot() {
+  const { data } = await sb.auth.getSession();
+  const session = data?.session;
+
+  console.log("session:", session);
+
+  if (!session) {
+    renderLogin();
+    return;
+  }
+
+  renderHome();
+}
+
+
+  boot();
+
 </script>
 </body>
 </html>
