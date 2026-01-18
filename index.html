@@ -431,14 +431,70 @@ function saveReflection(){
   render();
 }
 
-function renderLogin(){
+function renderLogin() {
   root.innerHTML = `
-  <div class="app">
-    <h1>Entre gestos e silêncios</h1>
-    <p class="small">Digite seu e-mail para liberar o acesso diário aos capítulos. O livro completo abre no 7º dia.</p>
-    <input id="email" placeholder="Seu e-mail" inputmode="email" />
-    <button onclick="login()">Entrar</button>
-  </div>`;
+    <div class="app">
+      <h1>Entre gestos e silêncios</h1>
+      <p class="small">
+        Digite seu e-mail e crie uma senha para liberar o acesso diário aos capítulos.
+        O livro completo abre no 7º dia.
+      </p>
+
+      <input id="email" type="email" placeholder="Seu e-mail" />
+      <input id="password" type="password" placeholder="Crie uma senha" />
+
+      <button id="btn-login">Entrar</button>
+      <button id="btn-signup" class="secondary">Criar conta</button>
+    </div>
+  `;
+
+  document.getElementById("btn-login").onclick = handleLogin;
+  document.getElementById("btn-signup").onclick = handleSignup;
+}
+async function handleSignup() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Preencha e-mail e senha");
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Conta criada. Agora clique em Entrar.");
+}
+
+async function handleLogin() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Preencha e-mail e senha");
+    return;
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  location.reload();
+}
+
 }
 
 function renderHome(){
