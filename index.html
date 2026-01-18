@@ -739,7 +739,17 @@ async function boot() {
     return;
   }
 
-  renderHome();
+  // Set user from session
+  user = session.user.email;
+  localStorage.setItem("userEmail", user);
+  
+  // Ensure purchaseAt is set
+  if (!purchaseAt) {
+    purchaseAt = todayISO();
+    localStorage.setItem("purchaseAt", purchaseAt);
+  }
+  
+  render();
 }
 
 </script>
