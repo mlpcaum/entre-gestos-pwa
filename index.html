@@ -224,12 +224,17 @@ button.secondary{box-shadow: 0 10px 22px rgba(0,0,0,.14)}
 
 .quoteText{overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div id="root"></div>
 
 <script src="./chapters-data.js"></script>
 <script>
+  const supabase = window.supabase.createClient(
+    window.__ENV__.SUPABASE_URL,
+    window.__ENV__.SUPABASE_ANON_KEY
+  );
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
 }
