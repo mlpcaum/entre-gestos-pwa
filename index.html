@@ -528,16 +528,24 @@ function renderHome(){
 
   root.innerHTML = `
   <div class="app">
+
     <div class="headerCard">
-  <div class="headerInner">
-    <img class="appIcon" src="./icon-96.png" alt="Ícone do app" />
-    <div class="headerText">
-      <div class="title">Entre gestos e silêncios</div>
-      <div class="subtitle"><em>Uma experiência de leitura emocional criada pelo psicólogo Matheus Caum</em> <span class="crp">CRP 08/40928</span></div>
+      <div class="headerInner">
+        <img class="appIcon" src="./icon-96.png" alt="Ícone do app" />
+        <div class="headerText">
+          <div class="title">Entre gestos e silêncios</div>
+          <div class="subtitle">
+            <em>Uma experiência de leitura emocional criada pelo psicólogo Matheus Caum</em>
+            <span class="crp">CRP 08/40928</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-    <p class="small">E-mail: ${esc(maskEmail(user))} <br/>Dia de acesso: <strong>${d}</strong> | ${bookInfo}</p>
+
+    <p class="small">
+      E-mail: ${esc(maskEmail(user))}<br/>
+      Dia de acesso: <strong>${d}</strong> | ${bookInfo}
+    </p>
 
     <div class="toprow">
       <button onclick="openPDF()" ${bookReady ? "" : "disabled"}>Ler livro completo</button>
@@ -551,7 +559,8 @@ function renderHome(){
       const badge = ch.unlockDay === 0 ? "Disponível agora" : status;
 
       return `
-      <div class="card ${ok ? "" : "locked"}">\n        <img class="thumb" src="${CHAPTER_IMAGES[String(ch.id)] || './chapter-1.jpg'}" alt="Imagem do capítulo" loading="lazy"/>
+      <div class="card ${ok ? "" : "locked"}">
+        <img class="thumb" src="${CHAPTER_IMAGES[String(ch.id)] || './chapter-1.jpg'}" alt="Imagem do capítulo" loading="lazy"/>
         <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
           <div>
             <div style="font-weight:700;margin-bottom:6px">${esc(ch.title)}</div>
@@ -565,13 +574,15 @@ function renderHome(){
       </div>`;
     }).join("")}
 
-   <div class="footer-rights">
-  <em>
-    © Matheus Caum – CRP 08/40928<br>
-    Todos os direitos reservados. Este conteúdo é protegido por direitos autorais e destinado exclusivamente ao uso pessoal do usuário.
-  </em>
-</div>
+    <div class="footer-rights">
+      <em>
+        © Matheus Caum – CRP 08/40928<br>
+        Todos os direitos reservados. Este conteúdo é protegido por direitos autorais e destinado exclusivamente ao uso pessoal do usuário.
+      </em>
+    </div>
 
+  </div>
+  `;
 }
 
 
@@ -717,10 +728,11 @@ function render(){
 render();
 
 async function boot() {
-  const { data } = await sb.auth.getSession();
-  const session = data?.session;
+  const { data: sessionData, error: sessionErr } = await sb.auth.getSession();
+  const session = sessionData?.session;
 
-  console.log("session:", session);
+  if (sessionErr) console.log("getSession error", sessionErr);
+  console.log("boot session", session);
 
   if (!session) {
     renderLogin();
@@ -729,9 +741,6 @@ async function boot() {
 
   renderHome();
 }
-
-
-  boot();
 
 </script>
 </body>
