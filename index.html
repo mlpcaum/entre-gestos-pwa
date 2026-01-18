@@ -223,6 +223,16 @@ button.secondary{box-shadow: 0 10px 22px rgba(0,0,0,.14)}
 }
 
 .quoteText{overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;line-clamp:5}
+
+.footer-rights {
+  margin-top: 24px;
+  text-align: center;
+  color: #9aa4b2;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./env.js"></script>
@@ -555,8 +565,13 @@ function renderHome(){
       </div>`;
     }).join("")}
 
-    <p class="small">Regra: capítulos 1 e 2 liberados no dia 0. A partir do 3, libera 1 por dia. O livro completo abre no 7º dia.</p>
-  </div>`;
+   <div class="footer-rights">
+  <em>
+    © Matheus Caum – CRP 08/40928<br>
+    Todos os direitos reservados. Este conteúdo é protegido por direitos autorais e destinado exclusivamente ao uso pessoal do usuário.
+  </em>
+</div>
+
 }
 
 
