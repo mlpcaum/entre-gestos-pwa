@@ -459,21 +459,26 @@ async function handleSignup() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    alert("Preencha e-mail e senha");
-    return;
-  }
+  if (!email || !password) return alert("Preencha e-mail e senha.");
+  if (password.length < 6) return alert("A senha precisa ter pelo menos 6 caracteres.");
 
-  const { error } = await sb.auth.signUp({
-    email,
-    password
-  });
+  const { data, error } = await sb.auth.signUp({ email, password });
 
   if (error) {
-    alert(error.message);
+    alert("Erro ao criar conta: " + error.message);
+    console.log("signup error", error);
     return;
   }
 
+  if (!data.session) {
+    alert("Conta criada. Agora confirme o e-mail e depois clique em Entrar.");
+  } else {
+    alert("Conta criada e logada.");
+    location.reload();
+  }
+}
+
+  
   alert("Conta criada. Agora clique em Entrar.");
 }
 
@@ -482,22 +487,28 @@ async function handleLogin() {
   const password = document.getElementById("password").value;
 
   if (!email || !password) {
-    alert("Preencha e-mail e senha");
+    alert("Preencha e-mail e senha.");
     return;
   }
 
-  const { error } = await sb.auth.signInWithPassword({
-    email,
-    password
-  });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
   if (error) {
-    alert(error.message);
+    alert("Erro ao entrar: " + error.message);
+    console.log("login error", error);
     return;
   }
 
+  if (!data || !data.session) {
+    alert("Login não iniciou sessão. Se você acabou de criar a conta, pode ser que precise confirmar o e-mail.");
+    console.log("login data", data);
+    return;
+  }
+
+  alert("Entrou com sucesso.");
   location.reload();
 }
+
 
 function renderHome(){
   const d = daysSincePurchase();
