@@ -743,10 +743,30 @@ async function boot() {
   user = session.user.email;
   localStorage.setItem("userEmail", user);
   
-  // Ensure purchaseAt is set
-  if (!purchaseAt) {
+  // Fetch or create purchaseAt from database
+  const { data: profileData, error: profileErr } = await sb
+    .from("user_profiles")
+    .select("purchase_date")
+    .eq("email", user)
+    .single();
+
+  if (profileErr && profileErr.code !== "PGRST116") {
+    console.log("Profile fetch error:", profileErr);
+  }
+
+  if (profileData && profileData.purchase_date) {
+    // Use date from database
+    purchaseAt = profileData.purchase_date;
+    localStorage.setItem("purchaseAt", purchaseAt);
+  } else if (!purchaseAt) {
+    // Create new purchase record
     purchaseAt = todayISO();
     localStorage.setItem("purchaseAt", purchaseAt);
+    
+    await sb
+      .from("user_profiles")
+      .insert([{ email: user, purchase_date: purchaseAt }])
+      .catch(err => console.log("Insert error:", err));
   }
   
   render();
